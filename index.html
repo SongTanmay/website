@@ -8,21 +8,20 @@
 		body {
 			font-family: 'Quicksand', sans-serif;
 			margin: 0;
+			height: 900px;
 		}
 		section {
 			width: 80%;
 			height: 100%;
 			margin: auto;
-			background: #eae6e6;
 		}
 		header {
 			position: fixed;
-			background: #fff;
 			color:#000;
-
 			font-size: 2em;
+			z-index: 1;
 			width: 80%;
-			height: auto	;
+			height: auto;
 		}
 		h1 {
 			font-weight: normal;
@@ -38,6 +37,13 @@
 			text-align: left;
 			margin-top: 120px;
 		}
+		.birdsCanvas{
+			position: absolute;
+	    top: 10;
+	    left: 0;
+	    min-width: 960px;
+	    width: 100%;
+		}
 	</style>
 </head>
 
@@ -47,7 +53,7 @@
 		<header>
 			<img src="img/frame.png" alt="frame" data-parallax='{"x": 0, "from-scroll": 50, "distance": 0, "smoothness": 10}'
 						data-0="background-image:linear-gradient(0deg, hsl(150, 2%, 100%), hsl(150, 2%, 100%));"
-						data-2000="background-image:linear-gradient(360deg, hsl(150, 90%, 50%), hsl(150, 90%, 50%));"/>
+						data-200="background-image:linear-gradient(360deg, hsl(150, 90%, 50%), hsl(150, 90%, 50%));"/>
 			<img src="img/t.png" alt="t" data-parallax='{"x": -160, "from-scroll": 70, "distance": 0, "smoothness": 20}'/>
 			<img src="img/s.png" alt="s" data-parallax='{"x": -226, "from-scroll": 90, "distance": 0, "smoothness": 30}'/>
 			<div style="float: right;" data-parallax='{"y": 110, "from-scroll": 50, "distance": 0, "smoothness": 40}'>
@@ -55,6 +61,11 @@
 			</div>
 		</header>
 	</section>
+	<div class="birdsCanvas">
+		<div id="bg" style="left: 0px;">
+			<canvas id='canvasID' width="1680" height="949" style="position: absolute; left: 0px; top: 0px;"></canvas>
+		</div>
+	</div>
 	<script src="js/jquery-2.1.3.min.js"></script>
 	<script src="js/jquery.easing.1.3.js"></script>
 	<script src="js/jquery.parallax-scroll.js"></script>
@@ -398,8 +409,9 @@
 
 
 			}
-
-			renderer = new THREE.CanvasRenderer();
+			var canvas = document.getElementById("canvasID");
+			renderer = new THREE.WebGLRenderer({ canvas: canvas });
+			//renderer = new THREE.CanvasRenderer();
 			renderer.setClearColor( 0xffffff );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
