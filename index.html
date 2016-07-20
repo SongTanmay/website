@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>jquery.parallax-scroll demo</title>
+	<title>coming soon</title>
 	<link href='http://fonts.googleapis.com/css?family=Quicksand' rel='stylesheet' type='text/css'>
 	<style>
 		body {
 			font-family: 'Quicksand', sans-serif;
 			margin: 0;
-			height: 900px;
+			height: auto;
 		}
 		section {
-			width: 80%;
 			height: 100%;
 			margin: auto;
 		}
@@ -22,6 +21,8 @@
 			z-index: 1;
 			width: 80%;
 			height: auto;
+			margin-left: 10%;
+			margin-right: 10%;
 		}
 		h1 {
 			font-weight: normal;
@@ -43,6 +44,7 @@
 	    left: 0;
 	    min-width: 960px;
 	    width: 100%;
+			z-index: -1;
 		}
 	</style>
 </head>
@@ -60,12 +62,12 @@
 				"Everything is a function of time"
 			</div>
 		</header>
-	</section>
-	<div class="birdsCanvas">
-		<div id="bg" style="left: 0px;">
-			<canvas id='canvasID' width="1680" height="949" style="position: absolute; left: 0px; top: 0px;"></canvas>
+		<div class="birdsCanvas">
+			<div id="bg" style="left: 0px;">
+				<canvas id='canvasID' width="1680" height="auto" style="position: absolute; left: 0px; top: 0px;"></canvas>
+			</div>
 		</div>
-	</div>
+	</section>
 	<script src="js/jquery-2.1.3.min.js"></script>
 	<script src="js/jquery.easing.1.3.js"></script>
 	<script src="js/jquery.parallax-scroll.js"></script>
@@ -414,10 +416,10 @@
 			//renderer = new THREE.CanvasRenderer();
 			renderer.setClearColor( 0xffffff );
 			renderer.setPixelRatio( window.devicePixelRatio );
-			renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+			renderer.setSize( SCREEN_WIDTH, document.body.clientHeight );
 
 			document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-			document.body.appendChild( renderer.domElement );
+			document.getElementById("bg").appendChild( renderer.domElement );
 
 			stats = new Stats();
 			//document.getElementById( 'container' ).appendChild(stats.dom);
@@ -433,7 +435,7 @@
 			camera.aspect = window.innerWidth / window.innerHeight;
 			camera.updateProjectionMatrix();
 
-			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setSize( window.innerWidth, document.body.clientHeight );
 
 		}
 
