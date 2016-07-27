@@ -7,32 +7,40 @@
 	<style>
 		body {
 			font-family: 'Quicksand', sans-serif;
+			background-color: #efefef;
 		}
 		#header_footer_section {
-			z-index: 1;
-			position: fixed;
-			width: 100%;
+			width: 100%
 		}
 		header {
+			position: fixed;
 			color:#000;
 			font-size: 2em;
+			z-index: 1;
 			width: 80%;
-			margin: auto;
-			position: fixed;
+			margin: 0 10% 0 10%;
+		}
+		#rec{
+			background-color: #000;
+	    width: 80%;
+	    height: 50%;
+	  
+	    padding: 0px;
+	    position: fixed; /* fixed or static */
+	    top: 160px;
 		}
 		footer {
+		  position: fixed;
+		  right: 0;
 		  bottom: 0;
+		  left: 0;
+		  padding: 1rem;
 		  background-color: #efefef;
 		  text-align: center;
-			width: 80%;
-			margin: auto;
-			position: fixed;
+			z-index: 1;
 		}
 		#rec_container_section{
 			width: 100%;
-		}
-		#rec{
-			width: 80%;
 		}
 	</style>
 </head>
@@ -102,11 +110,13 @@
 		info.innerHTML = '<a href="http://threejs.org" target="_blank">three.js</a> - clickable objects';
 		container.appendChild( info );*/
 
+
 		camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
 		camera.position.y = 100;
 		camera.position.z = 500;
 
 		scene = new THREE.Scene();
+
 
 		var geometry = new THREE.BoxGeometry( 200, 200, 10 );
 
@@ -116,11 +126,13 @@
 			//object1.position.y = object1.position.x + 150;
 			object1.position.z = 0;
 			//object1.scale.x = Math.random() * 2 + 1;
+
 			//object.scale.y = Math.random() * 2 + 1;
 			//object.scale.z = Math.random() * 2 + 1;
 			//object.rotation.x = Math.random() * 2 * Math.PI;
 			//object.rotation.y = Math.random() * 2 * Math.PI;
 			//object.rotation.z = Math.random() * 2 * Math.PI;
+
 			scene.add( object1 );
 
 		var object2 = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff, opacity: 0.6 } ) );
@@ -144,6 +156,7 @@
 		//renderer = new THREE.CanvasRenderer();
 		renderer.setClearColor( 0xf0f0f0 );
 		renderer.setPixelRatio( window.devicePixelRatio );
+
 		renderer.setSize( window.innerWidth, document.body.clientHeight );
 		container.appendChild(renderer.domElement);
 
@@ -166,10 +179,10 @@
 
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
-
 		renderer.setSize( window.innerWidth, window.innerHeight );
 
 	}
+
 
 	function onDocumentMouseMove( event ) {
 		mouseX = event.clientX - windowHalfX;
@@ -190,6 +203,15 @@
 
 		event.preventDefault();
 
+		//mouse.x = ( (event.clientX / renderer.domElement.clientWidth) / renderer.domElement.width ) * 2 - 1;
+		//mouse.y = - ( (event.clientY / renderer.domElement.clientHeight) / renderer.domElement.height ) * 2 + 1;
+
+		//mouse.x = ( ( event.clientX - renderer.domElement.offsetLeft ) / renderer.domElement.width ) * 2 - 1;
+    //mouse.y = - ( ( event.clientY - renderer.domElement.offsetTop ) / renderer.domElement.height ) * 2 + 1;
+
+		//mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+		//mouse.y = - (event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+
 		mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
 		mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
 
@@ -197,7 +219,7 @@
 
 		var intersects = raycaster.intersectObjects( scene.children );
 
-		if ( intersects.length > 0 && intersects[ 0 ].object.position.z <= 0) {
+		if ( intersects.length > 0 && intersects[ 0 ].object.position.z <= 10) {
 
 			new TWEEN.Tween( intersects[ 0 ].object.position ).to( {
 				x: intersects[ 0 ].object.position.x,
