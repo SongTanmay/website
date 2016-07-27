@@ -7,12 +7,10 @@
 	<style>
 		body {
 			font-family: 'Quicksand', sans-serif;
-			margin: 0;
-			height: auto;
+			background-color: #efefef;
 		}
-		section {
-			height: 100%;
-			margin: auto;
+		#header_footer_section {
+			width: 100%
 		}
 		header {
 			position: fixed;
@@ -20,36 +18,19 @@
 			font-size: 2em;
 			z-index: 1;
 			width: 80%;
-			height: 20%;
-			margin-left: 10%;
-			margin-right: 10%;
-		}
-		header:hover {
-    	height: 10%;
-		}
-		header div{
-			top: 0;
-		}
-		header:hover {
-    	height: 10%;
-		}
-		h1 {
-			font-weight: normal;
-		}
-		ul {
-			text-align: left;
-			margin-top: 120px;
+			margin: 0 10% 0 10%;
 		}
 		#rec{
-			position: fixed;
-			float: left;
-			width: 50%;
-			height: 50%;
-			top: 27%;
-			margin-left: 20%;
+			background-color: #000;
+	    width: 80%;
+	    height: 50%;
+	    margin:  0 10% 0 10%;
+	    padding: 0px;
+	    position: fixed; /* fixed or static */
+	    top: 160px;
 		}
 		footer {
-		  position: fixed;;
+		  position: fixed;
 		  right: 0;
 		  bottom: 0;
 		  left: 0;
@@ -57,13 +38,16 @@
 		  background-color: #efefef;
 		  text-align: center;
 			z-index: 1;
-}
+		}
+		#rec_section{
+			width: 100%;
+		}
 	</style>
 </head>
 
 <body>
 
-	<section>
+	<section id='header_footer_section'>
 		<header>
 			<img src="img/frame.png" alt="frame" data-parallax='{"x": 0, "from-scroll": 50, "distance": 0, "smoothness": 10}'
 						data-0="background-image:linear-gradient(0deg, hsl(150, 2%, 100%), hsl(150, 2%, 100%));"
@@ -74,12 +58,13 @@
 				"Everything is a function of time"
 			</div>
 		</header>
-		<div id='rec'>
-			<canvas id='canvasID' style="position: absolute; left: 0px; top: 0px;"></canvas>
-		</div>
 		<footer>
   	<p>todo</p>
 		</footer>
+	</section>
+	<section id='rec_section'>
+		<div id='rec'>
+		</div>
 	</section>
 	<script src="js/jquery-2.1.3.min.js"></script>
 	<script src="js/jquery.easing.1.3.js"></script>
@@ -108,7 +93,7 @@
 
 		container = document.getElementById('rec');
 		//container = document.createElement( 'div' );
-		document.getElementsByTagName('section')[0].appendChild( container );
+		//document.getElementById('rec').appendChild( container );
 
 		/*var info = document.createElement( 'div' );
 		info.style.position = 'absolute';
@@ -118,18 +103,18 @@
 		info.innerHTML = '<a href="http://threejs.org" target="_blank">three.js</a> - clickable objects';
 		container.appendChild( info );*/
 
-		camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+		camera = new THREE.PerspectiveCamera( 70, container.clientWidth / container.clientHeight, 1, 10000 );
 		camera.position.y = 300;
 		camera.position.z = 500;
 
 		scene = new THREE.Scene();
 
-		var geometry = new THREE.BoxGeometry( 100, 200, 10 );
-
+		var geometry = new THREE.BoxGeometry( 1000, 500, 100 );
+		var a = 0.1;
 		for ( var i = 0; i < 3; i ++ ) {
 
 			var object = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff, opacity: 0.6 } ) );
-			object.position.x = Math.random() * 800 - 400;
+			object.position.x = a * 800 - 400;
 			object.position.y = object.position.x + 150;
 			//object.position.z = object.position.y + 150;
 			//object.scale.x = Math.random() * 2 + 1;
@@ -139,7 +124,7 @@
 			//object.rotation.y = Math.random() * 2 * Math.PI;
 			//object.rotation.z = Math.random() * 2 * Math.PI;
 			scene.add( object );
-
+			a += 0.3
 		}
 
 		//
@@ -148,11 +133,11 @@
 		mouse = new THREE.Vector2();
 
 		var canvas = document.getElementById("canvasID");
-		renderer = new THREE.CanvasRenderer({ canvas: canvas });
-		//renderer = new THREE.CanvasRenderer();
+		//renderer = new THREE.CanvasRenderer({ canvas: canvas });
+		renderer = new THREE.CanvasRenderer();
 		renderer.setClearColor( 0xf0f0f0 );
 		renderer.setPixelRatio( window.devicePixelRatio );
-		renderer.setSize( 300, 300 );
+		renderer.setSize( container.clientWidth, container.clientHeight );
 		container.appendChild(renderer.domElement);
 
 		stats = new Stats();
@@ -169,10 +154,10 @@
 
 	function onWindowResize() {
 
-		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.aspect = container.clientWidth/ container.clientHeight;
 		camera.updateProjectionMatrix();
 
-		renderer.setSize( window.innerWidth, document.body.clientHeight );
+		renderer.setSize( container.clientWidth , container.clientHeight );
 
 	}
 
@@ -190,8 +175,17 @@
 
 		event.preventDefault();
 
-		mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-		mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+		//mouse.x = ( (event.clientX / renderer.domElement.clientWidth) / renderer.domElement.width ) * 2 - 1;
+		//mouse.y = - ( (event.clientY / renderer.domElement.clientHeight) / renderer.domElement.height ) * 2 + 1;
+
+		//mouse.x = ( ( event.clientX - renderer.domElement.offsetLeft ) / renderer.domElement.width ) * 2 - 1;
+    //mouse.y = - ( ( event.clientY - renderer.domElement.offsetTop ) / renderer.domElement.height ) * 2 + 1;
+
+		//mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+		//mouse.y = - (event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+
+		mouse.x = ( ( event.clientX - container.offsetLeft ) / container.clientWidth ) * 2 - 1;
+    mouse.y = - ( ( event.clientY - container.offsetTop ) / container.clientHeight ) * 2 + 1;
 
 		raycaster.setFromCamera( mouse, camera );
 
@@ -200,16 +194,16 @@
 		if ( intersects.length > 0 ) {
 
 			new TWEEN.Tween( intersects[ 0 ].object.position ).to( {
-				x: Math.random() * 800 - 400,
-				y: Math.random() * 800 - 400,
-				z: Math.random() * 800 - 400 }, 2000 )
+				x: Math.random() * 800 - 40,
+				y: Math.random() * 800 - 40,
+				z: Math.random() * 80 - 40 }, 2000 )
 			.easing( TWEEN.Easing.Elastic.Out).start();
 
-			new TWEEN.Tween( intersects[ 0 ].object.rotation ).to( {
-				x: Math.random() * 2 * Math.PI,
-				y: Math.random() * 2 * Math.PI,
-				z: Math.random() * 2 * Math.PI }, 2000 )
-			.easing( TWEEN.Easing.Elastic.Out).start();
+			//new TWEEN.Tween( intersects[ 0 ].object.rotation ).to( {
+				//x: Math.random() * 2 * Math.PI,
+				//y: Math.random() * 2 * Math.PI,
+				//z: Math.random() * 2 * Math.PI }, 2000 )
+			//.easing( TWEEN.Easing.Elastic.Out).start();
 
 		}
 
@@ -243,8 +237,8 @@
 
 		theta += 0.1;
 
-		camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
-		camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
+		//camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
+		//camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
 		//camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
 		camera.lookAt( scene.position );
 
