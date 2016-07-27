@@ -73,7 +73,6 @@
 	<script src="js/CanvasRenderer.js"></script>
 	<script src="js/stats.min.js"></script>
 	<script src="js/tween.min.js"></script>
-	<script src="js/threex.dynamictexture.js"></script>
 
 	<script>
 	var container, stats;
@@ -85,38 +84,9 @@
 	var windowHalfX = window.innerWidth / 2;
 	var windowHalfY = window.innerHeight / 2;
 	var mouseX = 0, mouseY = 0;
-	var updateFcts	= [];
-	var dev = ['.js','.rb','.c','.json'];
-	var designer = ['.ai','.psd','.indd','.pdf'];
-	var photographer = ['.jpeg','.png','.NEF'];
-	var dynamicTexture = [];
-	var material = [];
 
 	init();
 	animate();
-
-	function drawDynamicTexture(i){
-		dynamicTexture[i]	= new THREEx.DynamicTexture(512,512)
-		dynamicTexture[i].context.font	= "200px Verdana";
-		//dynamicTexture.texture.anisotropy = renderer.getMaxAnisotropy()
-		updateFcts.push(function(delta, now){
-			// build the text which contains the time
-			var present	= new Date()
-			var text	= dev[Math.floor(Math.random() * dev.length)];
-			function pad(n, width, z) {
-				z = z || '0';
-				n = n + '';
-				return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-			}
-			// update the text
-			dynamicTexture[i].clear('#FF9800')
-				.drawText(text, undefined, 256, '#efefef')
-		})
-
-		material[i]	= new THREE.MeshBasicMaterial({
-			map	: dynamicTexture[i].texture
-		})
-	}
 
 	function init() {
 
@@ -138,21 +108,13 @@
 
 		scene = new THREE.Scene();
 
-
 		var geometry = new THREE.BoxGeometry( 200, 200, 10 );
 
-		for(i = 1; i < 4 ;i ++){
-			drawDynamicTexture(i);
-		}
-
-
-
-			//var object1 = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff, opacity: 0.6 } ) );
-			var object1 = new THREE.Mesh( geometry, material[1]);
+			var object1 = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff, opacity: 0.6 } ) );
 			//object.position.x = Math.random() * 800 - 400;
 			object1.position.x = -300;
 			//object1.position.y = object1.position.x + 150;
-			object1.position.z = -100;
+			object1.position.z = 0;
 			//object1.scale.x = Math.random() * 2 + 1;
 			//object.scale.y = Math.random() * 2 + 1;
 			//object.scale.z = Math.random() * 2 + 1;
@@ -161,19 +123,18 @@
 			//object.rotation.z = Math.random() * 2 * Math.PI;
 			scene.add( object1 );
 
-		var object2 = new THREE.Mesh( geometry,material[2] );
+		var object2 = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff, opacity: 0.6 } ) );
 		object2.position.x = object1.position.x + 180;
 	//	object2.position.y = object2.position.x + 150;
 		object2.position.z = 100;
 		scene.add( object2 );
-		var object3 = new THREE.Mesh( geometry, material[3] );
+		var object3 = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff, opacity: 0.6 } ) );
 		object3.position.x = object1.position.x + 360;
 		//object3.position.y = object3.position.x + 150;
-		object3.position.z = -100;
+		object3.position.z = 0;
 		scene.add( object3 );
 
 		//
-
 
 		raycaster = new THREE.Raycaster();
 		mouse = new THREE.Vector2();
@@ -186,7 +147,6 @@
 		renderer.setSize( window.innerWidth, document.body.clientHeight );
 		container.appendChild(renderer.domElement);
 
-
 		stats = new Stats();
 		//container.appendChild( stats.dom );
 
@@ -197,11 +157,6 @@
 		//
 
 		window.addEventListener( 'resize', onWindowResize, false );
-		updateFcts.push(function(delta, now){
-		camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3)
-		camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3)
-		camera.lookAt( scene.position )
-	})
 
 	}
 
@@ -242,7 +197,7 @@
 
 		var intersects = raycaster.intersectObjects( scene.children );
 
-		if ( intersects.length > 0 && intersects[ 0 ].object.position.z <= 10) {
+		if ( intersects.length > 0 && intersects[ 0 ].object.position.z <= 0) {
 
 			new TWEEN.Tween( intersects[ 0 ].object.position ).to( {
 				x: intersects[ 0 ].object.position.x,
@@ -289,11 +244,7 @@
 
 	function animate() {
 
-		setTimeout( function() {
-
-        requestAnimationFrame( animate );
-
-    }, 1000 / 2 );
+		requestAnimationFrame( animate );
 
 		render();
 		stats.update();
@@ -308,8 +259,6 @@
 		TWEEN.update();
 
 		theta += 0.1;
-
-
 		camera.position.x += ( mouseX - camera.position.x ) * 0.05;
 		camera.position.y += ( - mouseY - camera.position.y ) * 0.05;
 
@@ -318,63 +267,9 @@
 		//camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
 		camera.lookAt( scene.position );
 
-
 		renderer.render( scene, camera );
 
 	}
-
-	function TextureAnimator(texture, tilesHoriz, tilesVert, numTiles, tileDispDuration)
-	{
-		// note: texture passed by reference, will be updated by the update function.
-
-		this.tilesHorizontal = tilesHoriz;
-		this.tilesVertical = tilesVert;
-		// how many images does this spritesheet contain?
-		//  usually equals tilesHoriz * tilesVert, but not necessarily,
-		//  if there at blank tiles at the bottom of the spritesheet.
-		this.numberOfTiles = numTiles;
-		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-		texture.repeat.set( 1 / this.tilesHorizontal, 1 / this.tilesVertical );
-
-		// how long should each image be displayed?
-		this.tileDisplayDuration = tileDispDuration;
-
-		// how long has the current image been displayed?
-		this.currentDisplayTime = 0;
-
-		// which image is currently being displayed?
-		this.currentTile = 0;
-
-		this.update = function( milliSec )
-		{
-			this.currentDisplayTime += milliSec;
-			while (this.currentDisplayTime > this.tileDisplayDuration)
-			{
-				this.currentDisplayTime -= this.tileDisplayDuration;
-				this.currentTile++;
-				if (this.currentTile == this.numberOfTiles)
-					this.currentTile = 0;
-				var currentColumn = this.currentTile % this.tilesHorizontal;
-				texture.offset.x = currentColumn / this.tilesHorizontal;
-				var currentRow = Math.floor( this.currentTile / this.tilesHorizontal );
-				texture.offset.y = currentRow / this.tilesVertical;
-			}
-		};
-	}
-
-	var lastTimeMsec= null
-	requestAnimationFrame(function animate(nowMsec){
-		// keep looping
-		requestAnimationFrame( animate );
-		// measure time
-		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
-		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
-		lastTimeMsec	= nowMsec
-		// call each update function
-		updateFcts.forEach(function(updateFn){
-			updateFn(deltaMsec/1000, nowMsec/1000)
-		})
-	})
 
 	</script>
 </body>
