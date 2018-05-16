@@ -1,2 +1,2 @@
 # website
-This is the place which contains selected the work which I have done so far as a developer, designer and photographer.
+This is the place contains selected work which I have done so far as a developer and designer.
