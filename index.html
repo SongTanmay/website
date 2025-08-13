@@ -2,151 +2,70 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>jquery.parallax-scroll demo</title>
+	<title>coming soon !!!</title>
 	<link href='http://fonts.googleapis.com/css?family=Quicksand' rel='stylesheet' type='text/css'>
 	<style>
 		body {
 			font-family: 'Quicksand', sans-serif;
-			margin: 0;
+			background-color: #efefef;
 		}
-		section {
-			width: 1200px;
-			height: 3000px;
-			margin: auto;
-			background: #000;
+		#header_footer_section {
+			width: 100%
 		}
 		header {
 			position: fixed;
-			background: #fff;
-			color:#fff;
-			padding: 80px 0;
+			color:#000;
 			font-size: 2em;
+			z-index: 1;
+			width: 80%;
+			margin: 0 10% 0 10%;
+		}
+		#rec{
+			background-color: #000;
+	    width: 80%;
+	    height: 50%;
+	    padding: 0px;
+	    position: fixed; /* fixed or static */
+		}
+		footer {
+		  position: fixed;
+		  right: 0;
+		  bottom: 0;
+		  left: 0;
+		  padding: 1rem;
+		  background-color: #efefef;
+		  text-align: center;
+			z-index: 1;
+		}
+		#rec_container_section{
 			width: 100%;
-			height: 10%;
-		}
-		h1 {
-			font-weight: normal;
-		}
-		.github {
-			background: #fff;
-			position: absolute;
-			top: 10px;
-			right: 10px;
-			width: 100px;
-		}
-		ul {
-			text-align: left;
-			margin-top: 120px;
 		}
 	</style>
 </head>
 
 <body>
-	<section>
+
+	<section id='header_footer_section'>
 		<header>
 			<img src="img/frame.png" alt="frame" data-parallax='{"x": 0, "from-scroll": 50, "distance": 0, "smoothness": 10}'
 						data-0="background-image:linear-gradient(0deg, hsl(150, 2%, 100%), hsl(150, 2%, 100%));"
-						data-2000="background-image:linear-gradient(360deg, hsl(150, 90%, 50%), hsl(150, 90%, 50%));"/>
+						data-200="background-image:linear-gradient(360deg, hsl(150, 90%, 50%), hsl(150, 90%, 50%));"/>
 			<img src="img/t.png" alt="t" data-parallax='{"x": -160, "from-scroll": 70, "distance": 0, "smoothness": 20}'/>
 			<img src="img/s.png" alt="s" data-parallax='{"x": -226, "from-scroll": 90, "distance": 0, "smoothness": 30}'/>
+			<div style="float: right;" data-parallax='{"y": 110, "from-scroll": 50, "distance": 0, "smoothness": 40}'>
+				"Everything is a function of time"
+			</div>
 		</header>
+		<footer>
+  	<p>todo</p>
+		</footer>
 	</section>
-	<!-- BODY SECTION -->
-<main class="portfolio-body">
-  <canvas id="portfolio-canvas"></canvas>
-</main>
 
-<style>
-  body {
-    margin: 0;
-    background: #0d0d0d;
-    color: white;
-    font-family: Arial, sans-serif;
-    overflow-x: hidden;
-  }
-
-  .portfolio-body {
-    position: relative;
-    height: 100vh;
-    width: 100%;
-  }
-
-  canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-</style>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
-<script>
-  // SCENE SETUP
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.z = 5;
-
-  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('portfolio-canvas'), antialias: true, alpha: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
-
-  // LIGHTS
-  const light = new THREE.DirectionalLight(0xffffff, 1);
-  light.position.set(5, 5, 5);
-  scene.add(light);
-  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-
-  // CARD DATA
-  const projects = [
-    { title: "Project One", description: "Lorem ipsum dolor sit amet.", color: 0xff4444 },
-    { title: "Project Two", description: "Consectetur adipiscing elit.", color: 0x44ff44 },
-    { title: "Project Three", description: "Sed do eiusmod tempor.", color: 0x4444ff }
-  ];
-
-  const cardMeshes = [];
-  const geometry = new THREE.PlaneGeometry(1.5, 2);
-
-  projects.forEach((proj, i) => {
-    const material = new THREE.MeshStandardMaterial({ color: proj.color });
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.x = (i - 1) * 2.2;
-    mesh.userData = proj;
-    scene.add(mesh);
-    cardMeshes.push(mesh);
-  });
-
-  // INTERACTION
-  let mouseX = 0, mouseY = 0;
-  document.addEventListener('mousemove', (event) => {
-    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-  });
-
-  // SCROLL PARALLAX
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY / window.innerHeight;
-    cardMeshes.forEach((mesh, i) => {
-      mesh.position.y = Math.sin(scrollY + i) * 0.5;
-    });
-  });
-
-  // ANIMATE
-  function animate() {
-    requestAnimationFrame(animate);
-    cardMeshes.forEach(mesh => {
-      mesh.rotation.y = mouseX * 0.2;
-      mesh.rotation.x = mouseY * 0.1;
-    });
-    renderer.render(scene, camera);
-  }
-  animate();
-
-  // RESIZE
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-</script>
+	<section id=rec_container_section>
+		<div id='rec'>
+			<canvas id='canvasID' style=""></canvas>
+		</div>
+	</section>
 
 	<script src="js/jquery-2.1.3.min.js"></script>
 	<script src="js/jquery.easing.1.3.js"></script>
@@ -154,6 +73,224 @@
 	<script src="js/skrollr.js"></script>
 	<script type="text/javascript">
 		skrollr.init();
+	</script>
+	<script src="js/three.js"></script>
+	<script src="js/Projector.js"></script>
+	<script src="js/CanvasRenderer.js"></script>
+	<script src="js/stats.min.js"></script>
+	<script src="js/tween.min.js"></script>
+
+	<script>
+	var container, stats;
+	var camera, scene, renderer;
+
+	var raycaster;
+	var mouse;
+
+	var windowHalfX = window.innerWidth / 2;
+	var windowHalfY = window.innerHeight / 2;
+	var mouseX = 0, mouseY = 0;
+
+	init();
+	animate();
+
+	function init() {
+
+		container = document.getElementById('rec');
+		//container = document.createElement( 'div' );
+		document.getElementById('rec_container_section').appendChild( container );
+
+		/*var info = document.createElement( 'div' );
+		info.style.position = 'absolute';
+		info.style.top = '10px';
+		info.style.width = '100%';
+		info.style.textAlign = 'center';
+		info.innerHTML = '<a href="http://threejs.org" target="_blank">three.js</a> - clickable objects';
+		container.appendChild( info );*/
+
+
+		camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+		camera.position.y = 100;
+		camera.position.z = 500;
+
+		scene = new THREE.Scene();
+
+
+		var geometry = new THREE.BoxGeometry( 200, 200, 10 );
+
+			var object1 = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff, opacity: 0.6 } ) );
+			//object.position.x = Math.random() * 800 - 400;
+			object1.position.x = -300;
+			//object1.position.y = object1.position.x + 150;
+			object1.position.z = 0;
+			//object1.scale.x = Math.random() * 2 + 1;
+
+			//object.scale.y = Math.random() * 2 + 1;
+			//object.scale.z = Math.random() * 2 + 1;
+			//object.rotation.x = Math.random() * 2 * Math.PI;
+			//object.rotation.y = Math.random() * 2 * Math.PI;
+			//object.rotation.z = Math.random() * 2 * Math.PI;
+
+			scene.add( object1 );
+
+		var object2 = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff, opacity: 0.6 } ) );
+		object2.position.x = object1.position.x + 180;
+	//	object2.position.y = object2.position.x + 150;
+		object2.position.z = 100;
+		scene.add( object2 );
+		var object3 = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff, opacity: 0.6 } ) );
+		object3.position.x = object1.position.x + 360;
+		//object3.position.y = object3.position.x + 150;
+		object3.position.z = 0;
+		scene.add( object3 );
+
+		//
+
+		raycaster = new THREE.Raycaster();
+		mouse = new THREE.Vector2();
+
+		var canvas = document.getElementById("canvasID");
+		renderer = new THREE.CanvasRenderer({ canvas: canvas });
+		//renderer = new THREE.CanvasRenderer();
+		renderer.setClearColor( 0xf0f0f0 );
+		renderer.setPixelRatio( window.devicePixelRatio );
+
+		renderer.setSize( window.innerWidth, document.body.clientHeight );
+		container.appendChild(renderer.domElement);
+
+		stats = new Stats();
+		//container.appendChild( stats.dom );
+
+		document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+		document.addEventListener( 'touchstart', onDocumentTouchStart, false );
+		document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+		//
+
+		window.addEventListener( 'resize', onWindowResize, false );
+
+	}
+
+	function onWindowResize() {
+		windowHalfX = window.innerWidth / 2;
+		windowHalfY = window.innerHeight / 2;
+
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+
+	}
+
+
+	function onDocumentMouseMove( event ) {
+		mouseX = event.clientX - windowHalfX;
+		mouseY = event.clientY - windowHalfY;
+	}
+
+	function onDocumentTouchStart( event ) {
+
+		event.preventDefault();
+
+		event.clientX = event.touches[0].clientX;
+		event.clientY = event.touches[0].clientY;
+		onDocumentMouseDown( event );
+
+	}
+
+	function onDocumentMouseDown( event ) {
+
+		event.preventDefault();
+
+		//mouse.x = ( (event.clientX / renderer.domElement.clientWidth) / renderer.domElement.width ) * 2 - 1;
+		//mouse.y = - ( (event.clientY / renderer.domElement.clientHeight) / renderer.domElement.height ) * 2 + 1;
+
+		//mouse.x = ( ( event.clientX - renderer.domElement.offsetLeft ) / renderer.domElement.width ) * 2 - 1;
+    //mouse.y = - ( ( event.clientY - renderer.domElement.offsetTop ) / renderer.domElement.height ) * 2 + 1;
+
+		//mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+		//mouse.y = - (event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+
+		mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+		mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+		raycaster.setFromCamera( mouse, camera );
+
+		var intersects = raycaster.intersectObjects( scene.children );
+
+		if ( intersects.length > 0 && intersects[ 0 ].object.position.z <= 10) {
+
+			new TWEEN.Tween( intersects[ 0 ].object.position ).to( {
+				x: intersects[ 0 ].object.position.x,
+				y: intersects[ 0 ].object.position.y,
+				z: 100 }, 3000 )
+			.easing( TWEEN.Easing.Elastic.Out).start();
+
+			//new TWEEN.Tween( intersects[ 0 ].object.rotation ).to( {
+			//	x: Math.random() * 2 * Math.PI,
+			//	y: Math.random() * 2 * Math.PI,
+			//	z: Math.random() * 2 * Math.PI }, 2000 )
+		//	.easing( TWEEN.Easing.Elastic.Out).start();
+
+			scene.traverse( function( node ) {
+
+            if ( node instanceof THREE.Mesh ) {
+
+                if ( node != intersects[ 0 ].object){
+
+                 new TWEEN.Tween( node.position ).to( {
+                    x: node.position.x,
+                    y: node.position.y,
+                    z: 0 }, 3000 )
+                 .easing( TWEEN.Easing.Elastic.Out).start();
+
+                }
+            }
+
+        } );
+
+		}
+
+		/*
+		// Parse all the faces
+		for ( var i in intersects ) {
+
+			intersects[ i ].face.material[ 0 ].color.setHex( Math.random() * 0xffffff | 0x80000000 );
+
+		}
+		*/
+	}
+
+	//
+
+	function animate() {
+
+		requestAnimationFrame( animate );
+
+		render();
+		stats.update();
+
+	}
+
+	var radius = 60;
+	var theta = 0;
+
+	function render() {
+
+		TWEEN.update();
+
+		theta += 0.1;
+		camera.position.x += ( mouseX - camera.position.x ) * 0.05;
+		camera.position.y += ( - mouseY - camera.position.y ) * 0.05;
+
+		//camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
+		//camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
+		//camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
+		camera.lookAt( scene.position );
+
+		renderer.render( scene, camera );
+
+	}
+
 	</script>
 </body>
 </html>
