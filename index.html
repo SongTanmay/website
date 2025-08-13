@@ -51,6 +51,103 @@
 			<img src="img/s.png" alt="s" data-parallax='{"x": -226, "from-scroll": 90, "distance": 0, "smoothness": 30}'/>
 		</header>
 	</section>
+	<!-- BODY SECTION -->
+<main class="portfolio-body">
+  <canvas id="portfolio-canvas"></canvas>
+</main>
+
+<style>
+  body {
+    margin: 0;
+    background: #0d0d0d;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+  }
+
+  .portfolio-body {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+<script>
+  // SCENE SETUP
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.z = 5;
+
+  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('portfolio-canvas'), antialias: true, alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  // LIGHTS
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(5, 5, 5);
+  scene.add(light);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
+  // CARD DATA
+  const projects = [
+    { title: "Project One", description: "Lorem ipsum dolor sit amet.", color: 0xff4444 },
+    { title: "Project Two", description: "Consectetur adipiscing elit.", color: 0x44ff44 },
+    { title: "Project Three", description: "Sed do eiusmod tempor.", color: 0x4444ff }
+  ];
+
+  const cardMeshes = [];
+  const geometry = new THREE.PlaneGeometry(1.5, 2);
+
+  projects.forEach((proj, i) => {
+    const material = new THREE.MeshStandardMaterial({ color: proj.color });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.x = (i - 1) * 2.2;
+    mesh.userData = proj;
+    scene.add(mesh);
+    cardMeshes.push(mesh);
+  });
+
+  // INTERACTION
+  let mouseX = 0, mouseY = 0;
+  document.addEventListener('mousemove', (event) => {
+    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+  });
+
+  // SCROLL PARALLAX
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY / window.innerHeight;
+    cardMeshes.forEach((mesh, i) => {
+      mesh.position.y = Math.sin(scrollY + i) * 0.5;
+    });
+  });
+
+  // ANIMATE
+  function animate() {
+    requestAnimationFrame(animate);
+    cardMeshes.forEach(mesh => {
+      mesh.rotation.y = mouseX * 0.2;
+      mesh.rotation.x = mouseY * 0.1;
+    });
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // RESIZE
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
+
 	<script src="js/jquery-2.1.3.min.js"></script>
 	<script src="js/jquery.easing.1.3.js"></script>
 	<script src="js/jquery.parallax-scroll.js"></script>
